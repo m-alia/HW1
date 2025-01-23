@@ -1,6 +1,6 @@
 
 /*
- * *** PLACE YOUR NAME / SECTION  HERE ***
+ * *** Malia Kuykendall / COMP 272/400C-001 ***
  *
  * Homework # 1 (Programming Assignment). This Java class defines some basic
  * manipulation operations on Linked-Lists and Stacks.
@@ -48,7 +48,7 @@ public class HW1 {
 
         /*
          * Method sortedInsert() - this method will insert a new node to the
-         * linked list containing the value specific in teh parameter 'data'.
+         * linked list containing the value specific in the parameter 'data'.
          * The newly inserted node will be inserted in sorted order within
          * the linked-list.
          *
@@ -73,7 +73,6 @@ public class HW1 {
                 new_node.next = current.next;
                 current.next = new_node;
             }
-
             return;
         }
 
@@ -83,12 +82,24 @@ public class HW1 {
          * value that is less than the provided parameter 'ltValue'.
          *
          * The method will invoke the method removeElements for each element
-         * found in the linked-list that is less than thr parameter value passed.
+         * found in the linked-list that is less than the parameter value passed.
          */
         public void removeElementsLT ( int ltValue ) {
-
-            // YOUR CODE GOES HERE
-
+            // case for head item
+            while (this.head != null && this.head.data < ltValue) {
+                removeElement(this.head.data);
+            }
+            Node cursor = this.head;
+            Node storeNode = this.head;
+            while (cursor != null && cursor.next != null) {
+                if (cursor.next.data >= ltValue) {
+                    cursor = cursor.next;
+                } else {
+                    storeNode = cursor.next.next;
+                    removeElement(cursor.next.data);
+                    cursor.next = storeNode;
+                }
+            }
             return;
         }
 
@@ -99,9 +110,24 @@ public class HW1 {
          */
 
         public void removeElement ( int value ) {
-
-            // YOUR CODE GOES HERE
-
+            // case for head item
+            while (this.head != null && this.head.data == value) {
+                this.head = this.head.next;
+            }
+            Node cursor = this.head;
+            while (cursor != null && cursor.next != null) {
+                if (cursor.next.data != value) {
+                    cursor = cursor.next;
+                } else {
+                    cursor.next = cursor.next.next;
+                }
+            }
+            /*
+             * cursor traverses through linked list, skipping any nodes with data matching the parameter 'value'
+             * code looks at next node, determines if it matches the parameter
+             * if so, updates current node's 'next' value to be that of the skipped node's 'next'
+             * continues process until entire linked list has been traversed
+            */ 
             return;
         }
 
@@ -151,7 +177,7 @@ public class HW1 {
          * or 'false' on if the passed in parameter string is a palindrome or not.
          *
          * The routine should be case insensitive! Meaning 'RaCe cAr' is a palindrome.
-         * Moreover, spaces are ignore, so both 'race car' and 'racecar' are plaindromes.
+         * Moreover, spaces are ignore, so both 'race car' and 'racecar' are palindromes.
          *
          * The method should utilize the provided Stack class.
          */
@@ -160,8 +186,17 @@ public class HW1 {
             Stack<Character> stack = new Stack<>();
             input = input.toLowerCase().replaceAll("\\s+", "");
 
-            // Your CODE GOES HERE
-            return false;
+            boolean isPalindrome = true; // initially assume input is palindrome
+            if (input != null) {
+                for (int i = 0; i < input.length(); i++) {
+                    stack.push(input.charAt(i));
+                } // push string character by character onto stack
+                for (int i = 0; i < input.length(); i++) {
+                    isPalindrome = (stack.pop() == input.charAt(i));
+                } // pop each character back off the stack, and compare to input string
+                  // set boolean to false if the character does NOT match
+            }
+            return isPalindrome;
         }
 
 
@@ -178,12 +213,43 @@ public class HW1 {
          * destroy the passed in stack, meaning when the method returns, the passed in
          * stack should be identical to when this method is passed. One trick as you
          * pop elements off the passed in stack, place them in a temp stack. Then when
-         * completed, place them all back in teh original stack.
+         * completed, place them all back in the original stack.
          */
         public static int findLargestK(Stack<Integer> stack, int k) {
-
             // YOUR CODE GOES HERE
-            return -1;
+            int count = 0;
+            int largestK = -1;
+            Stack<Integer> tempStack = new Stack<>();
+
+            if (!stack.empty()) { // guard statement for case of empty stack
+                while (!stack.empty()) {
+                    tempStack.push(stack.pop());
+                } // temporarily pushes all elements from original stack onto new stack, effectively reversing order
+                while (!tempStack.empty()) {
+                    if (tempStack.peek() == k) {
+                        largestK = count;
+                    }
+                    stack.push(tempStack.pop());
+                    count++; 
+                }
+            }
+            /*
+             * Code pops elements off of original stack and pushes them onto a temporary stack
+                    * This effectively reverses the order
+                    * This makes it easier to count index, since stack index 0 is at the bottom of the stack
+             * Code then pops each element back off of the temporary stack, and also compares each element
+             * to the given parameter
+             * 'count' keeps track of the index of each element, increasing by 1 with each element popped off of
+             * the temporary stack and back onto the original stack
+             * If element matches specified parameter, 'largestK' is updated to be equal to the current count
+                     * This works because items on the temporary stack are reversed, meaning the bottom element
+                     * of the original stack is now on top of the temporary stack
+                     * 
+                     * Or in other words, elements are popped off of the temporary stack
+                     * Starting with the element originally at index 0
+                     * making 'count' match up with the original indexes of each element
+             */
+            return largestK;
         }
 
     }  // End class Stacks
@@ -219,7 +285,7 @@ public class HW1 {
         */
 
         // RETURN THE CORRECT OPTION NUMBER LISTED ABOVE
-        return -1;
+        return 3;
     }
 
 
@@ -240,7 +306,7 @@ public class HW1 {
          */
 
         // RETURN THE CORRECT OPTION LISTED ABOVE
-        return -1;
+        return 2;
     }
 
 }
